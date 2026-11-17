@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Trắc Nghiệm Giáo Dục Chính Trị 1 (120 Câu)</title>
+<style>
+  :root {
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --opt-bg: #f9fafb;
+    --opt-hover: #f3f4f6;
+    --correct-bg: #dcfce7;
+    --correct-border: #16a34a;
+    --correct-text: #14532d;
+    --wrong-bg: #fee2e2;
+    --wrong-border: #dc2626;
+    --wrong-text: #7f1d1d;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --opt-bg: #0f172a;
+      --opt-hover: #283548;
+      --correct-bg: #052e16;
+      --correct-border: #22c55e;
+      --correct-text: #bbf7d0;
+      --wrong-bg: #450a0a;
+      --wrong-border: #ef4444;
+      --wrong-text: #fecaca;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding-bottom: 76px;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 10px 14px;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .stats {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    flex-wrap: wrap;
+  }
+  .badge {
+    padding: 4px 9px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .badge-correct { background: var(--correct-bg); color: var(--correct-text); border: 1px solid var(--correct-border); }
+  .badge-wrong { background: var(--wrong-bg); color: var(--wrong-text); border: 1px solid var(--wrong-border); }
+  .badge-unanswered { background: var(--opt-bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-grid-toggle {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .filters {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+  .filter-btn {
+    background: var(--opt-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .filter-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .grid-drawer {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+  .grid-drawer.open { display: block; }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 6px;
+  }
+  .grid-item {
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--opt-bg);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .grid-item.correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); }
+  .grid-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); color: var(--wrong-text); }
+
+  main {
+    max-width: 760px;
+    margin: 14px auto;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .title-banner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .title-banner h1 { font-size: 17px; margin-bottom: 4px; }
+  .title-banner p { font-size: 13px; color: var(--text-muted); }
+
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    scroll-margin-top: 105px;
+  }
+  .q-text {
+    font-size: 15.5px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .opts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .opt-btn {
+    text-align: left;
+    background: var(--opt-bg);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 14.5px;
+    line-height: 1.45;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    width: 100%;
+    font-family: inherit;
+  }
+  .opt-btn:not(:disabled):active { transform: scale(0.99); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+    font-weight: 600;
+  }
+  .opt-btn.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong-border);
+    color: var(--wrong-text);
+    font-weight: 600;
+  }
+  .q-feedback {
+    margin-top: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.ok { color: var(--correct-border); }
+  .q-feedback.err { color: var(--wrong-border); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: none;
+  }
+
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    z-index: 90;
+  }
+  .bottom-btn {
+    flex: 1;
+    max-width: 240px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-next { background: var(--primary); color: #fff; }
+  .btn-reset { background: var(--opt-bg); color: var(--text); border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="stats">
+      <span class="badge badge-correct">Đúng: <span id="stat-correct">0</span></span>
+      <span class="badge badge-wrong">Sai: <span id="stat-wrong">0</span></span>
+      <span class="badge badge-unanswered">Chưa làm: <span id="stat-unanswered">120</span></span>
+    </div>
+    <button class="btn-grid-toggle" id="toggle-grid">Bảng câu hỏi ▾</button>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Tất cả (120)</button>
+    <button class="filter-btn" data-filter="unanswered">Chưa làm</button>
+    <button class="filter-btn" data-filter="correct">Đúng</button>
+    <button class="filter-btn" data-filter="wrong">Sai</button>
+  </div>
+  <div class="grid-drawer" id="grid-drawer">
+    <div class="grid-container" id="grid-container"></div>
+  </div>
+</header>
+
+<main id="quiz-main">
+  <div class="title-banner">
+    <h1>GIÁO DỤC CHÍNH TRỊ 1</h1>
+    <p>Trường Cao đẳng Nghề Sóc Trăng • Ngân hàng 120 câu trắc nghiệm</p>
+  </div>
+  <div id="questions-list" style="display:flex;flex-direction:column;gap:14px;"></div>
+  <div class="empty-state" id="empty-state">Không có câu hỏi nào trong mục lọc này.</div>
+</main>
+
+<div class="bottom-bar">
+  <button class="bottom-btn btn-next" id="btn-next-unanswered">Câu chưa làm tiếp theo ➔</button>
+  <button class="bottom-btn btn-reset" id="btn-reset">Làm lại</button>
+</div>
+
+<script>
+const QUESTIONS = [{"q": "1. Vị trí của môn học Giáo dục chính trị 1 tại Trường Cao đẳng Nghề Sóc Trăng là gì?", "opts": ["A. Môn học tự chọn dành cho trình độ trung cấp", "B. Môn học bắt buộc thuộc khối các môn học chung trong chương trình đào tạo trình độ trung cấp, cao đẳng", "C. Môn học chính trị chuyên sâu chỉ dành cho trình độ cao đẳng", "D. Môn học ngoại khóa, không bắt buộc"], "ans": 1}, {"q": "2. Nội dung chủ yếu của Giáo dục chính trị là gì?", "opts": ["A. Nghiên cứu lịch sử Đảng và Nhà nước Việt Nam từ năm 1975 đến nay", "B. Trang bị kiến thức về kinh tế thị trường và hội nhập quốc tế", "C. Giáo dục đạo đức nghề nghiệp và kỹ năng mềm", "D. Giáo dục chủ nghĩa Mác-Lênin, tư tưởng Hồ Chí Minh, Cương lĩnh, đường lối của Đảng, pháp luật của Nhà nước"], "ans": 3}, {"q": "3. Sau khi học xong môn Giáo dục chính trị 1, người học cần đạt được mục tiêu về kỹ năng gì?", "opts": ["A. Trình bày được một số nội dung khái quát về chủ nghĩa Mác – Lênin", "B. Rèn luyện phẩm chất chính trị, đạo đức, lối sống", "C. Vận dụng được các kiến thức chung về quan điểm, đường lối của Đảng, chính sách, pháp luật của Nhà nước vào việc học tập, rèn luyện, xây dựng đạo đức, lối sống để trở thành người công dân tốt, người lao động tốt và tham gia xây dựng, bảo vệ Tổ quốc", "D. Có năng lực tự chủ và trách nhiệm trong công việc"], "ans": 2}, {"q": "4. Chủ nghĩa Mác-Lênin là hệ thống lý luận khoa học thống nhất về mục tiêu, con đường, biện pháp, lực lượng thực hiện sự nghiệp nào?", "opts": ["A. Xây dựng nền kinh tế tư bản chủ nghĩa hiện đại", "B. Cải cách xã hội phong kiến", "C. Xây dựng Nhà nước pháp quyền xã hội chủ nghĩa", "D. Giải phóng giai cấp công nhân, giải phóng xã hội, giải phóng con người, xây dựng thành công chủ nghĩa xã hội và chủ nghĩa cộng sản"], "ans": 3}, {"q": "5. Triết học Mác-Lênin là khoa học về gì?", "opts": ["A. Về những quy luật chính trị - xã hội của đấu tranh cách mạng", "B. Về các quan hệ xã hội của sản xuất và trao đổi", "C. Về những quy luật chung nhất của tự nhiên, xã hội và tư duy", "D. Về mục tiêu, con đường, lực lượng, phương thức giải phóng xã hội"], "ans": 2}, {"q": "6. Kinh tế chính trị học Mác-Lênin nghiên cứu nội dung nào?", "opts": ["A. Những quy luật chung nhất của tự nhiên, xã hội và tư duy", "B. Các quan hệ xã hội của sản xuất và trao đổi trong quan hệ biện chứng với trình độ phát triển của lực lượng sản xuất và kiến trúc thượng tầng tương ứng của phương thức sản xuất nhất định", "C. Sự ra đời và phát triển của giai cấp vô sản", "D. Con đường và hình thức, phương pháp đấu tranh cách mạng của giai cấp công nhân"], "ans": 1}, {"q": "7. Về nguồn gốc hình thành Chủ nghĩa Mác, nhân tố kinh tế-xã hội quan trọng nhất là gì?", "opts": ["A. Nền đại công nghiệp tư bản chủ nghĩa giữa thế kỷ XIX phát triển mạnh ở nhiều nước Tây Âu", "B. Sự ra đời và phát triển của giai cấp vô sản với tính cách là lực lượng chính trị độc lập", "C. Thuyết tiến hóa giống loài của Đác-uyn", "D. Sự phát triển của các phong trào yêu nước ở châu Âu"], "ans": 1}, {"q": "8. Chủ nghĩa xã hội không tưởng phê phán ở Pháp là tiền đề lý luận nào dẫn đến sự ra đời của chủ nghĩa Mác?", "opts": ["A. Khoa học", "B. Tư tưởng lý luận", "C. Kinh tế - xã hội", "D. Nhân tố chủ quan"], "ans": 1}, {"q": "9. Theo Chủ nghĩa Mác-Lênin, có mấy giai đoạn phát triển chính?", "opts": ["A. Một giai đoạn (Giai đoạn C.Mác và Ph.Ăngghen)", "B. Hai giai đoạn (Giai đoạn C.Mác, Ph.Ăngghen và Giai đoạn V.I.Lênin)", "C. Ba giai đoạn (C.Mác, Ph.Ăngghen; V.I.Lênin phát triển; và Từ năm 1924 đến nay)", "D. Bốn giai đoạn"], "ans": 2}, {"q": "10. Chủ nghĩa duy vật biện chứng quan niệm như thế nào về bản chất của mọi sự vật, hiện tượng trong thế giới?", "opts": ["A. Bản chất là sự tồn tại của ý thức", "B. Bản chất là sự tồn tại của vật chất thông qua các sự vật cụ thể", "C. Bản chất là sự tồn tại độc lập của cả vật chất và ý thức", "D. Bản chất là sự tồn tại của các quy luật vật lý"], "ans": 1}, {"q": "11. Ý thức được Triết học Mác-Lênin định nghĩa như thế nào?", "opts": ["A. Là sự phản ánh thụ động hiện thực khách quan của óc người", "B. Là sự phản ánh tích cực, sáng tạo hiện thực khách quan của óc người", "C. Là cái có trước, quyết định vật chất", "D. Gồm hai yếu tố cơ bản là tri thức và ý chí"], "ans": 1}, {"q": "12. Trong mối quan hệ biện chứng giữa vật chất và ý thức, vai trò quyết định của vật chất thể hiện qua những mặt nào?", "opts": ["A. Chỉ quyết định nguồn gốc và sự vận động của ý thức", "B. Chỉ quyết định nội dung và bản chất của ý thức", "C. Quyết định nguồn gốc, nội dung, bản chất và sự vận động của ý thức", "D. Vật chất và ý thức tác động qua lại ngang bằng nhau"], "ans": 2}, {"q": "13. Theo Nguyên lý về mối liên hệ phổ biến, vì sao phải có quan điểm toàn diện để xem xét sự vật, hiện tượng?", "opts": ["A. Vì mọi sự vật luôn vận động và phát triển không ngừng", "B. Vì thế giới có vô vàn các sự vật, hiện tượng tồn tại trong mối liên hệ tương hỗ, ảnh hưởng trực tiếp hay gián tiếp với nhau", "C. Vì phải nhận thức sự vật, hiện tượng theo xu hướng vận động, đổi mới phát triển", "D. Vì sự thay đổi về lượng đều có thể dẫn tới những sự thay đổi về chất"], "ans": 1}, {"q": "14. Nguyên lý về sự phát triển khẳng định mọi sự vật, hiện tượng luôn luôn vận động và phát triển như thế nào?", "opts": ["A. Vận động theo khuynh hướng đi xuống, vòng tròn, hoặc lặp lại", "B. Vận động theo đường thẳng tắp", "C. Vận động và phát triển không ngừng", "D. Vận động từ hoàn thiện đến kém hoàn thiện"], "ans": 2}, {"q": "15. Quy luật nào của phép biện chứng duy vật được coi là hạt nhân của phép biện chứng duy vật?", "opts": ["A. Quy luật từ những sự thay đổi về lượng dẫn đến sự thay đổi về chất và ngược lại", "B. Quy luật phủ định của phủ định", "C. Quy luật thống nhất và đấu tranh của các mặt đối lập", "D. Quy luật quan hệ sản xuất phù hợp với trình độ phát triển của lực lượng sản xuất"], "ans": 2}, {"q": "16. Theo quy luật Lượng - Chất, khi lượng biến đổi đến giới hạn nào đó, điều gì sẽ xảy ra?", "opts": ["A. Sự vật, hiện tượng sẽ ngừng vận động", "B. Sẽ dẫn đến mâu thuẫn, phá vỡ chất cũ, chất mới ra đời với lượng mới", "C. Lượng mới sẽ ổn định vĩnh viễn, không biến đổi nữa", "D. Chất cũ sẽ được củng cố và tăng cường"], "ans": 1}, {"q": "17. Sự thống nhất giữa các mặt đối lập trong một sự vật, hiện tượng có tính chất gì?", "opts": ["A. Tuyệt đối", "B. Vĩnh viễn", "C. Tương đối", "D. Bất biến"], "ans": 2}, {"q": "18. Phủ định biện chứng được hiểu là gì?", "opts": ["A. Là sự tự phủ định do mâu thuẫn bên trong sự vật", "B. Là sự phủ định do tác động từ bên ngoài", "C. Là sự mất đi hoàn toàn của cái cũ mà không để lại yếu tố nào", "D. Là sự thay thế cái cũ bằng cái mới theo đường thẳng tắp"], "ans": 0}, {"q": "19. Trong Lý luận nhận thức Mác-Lênin, nhận thức được thực hiện thông qua hoạt động nào?", "opts": ["A. Thông qua tư duy lý tính", "B. Thông qua thực tiễn, lấy thực tiễn làm cơ sở, là mục đích, động lực và là tiêu chuẩn xác định tính đúng đắn của nhận thức", "C. Thông qua nhận thức cảm tính", "D. Thông qua các phát minh khoa học"], "ans": 1}, {"q": "20. Nhận thức của con người đi từ giai đoạn nào đến giai đoạn nào?", "opts": ["A. Từ tư duy trừu tượng đến trực quan sinh động", "B. Từ trực quan sinh động đến tư duy trừu tượng", "C. Từ biết bản chất đến biết hiện tượng", "D. Từ thụ động đến phản ánh không sáng tạo"], "ans": 1}, {"q": "21. Trong ba hình thức cơ bản của hoạt động thực tiễn, hoạt động nào được coi là hoạt động cơ bản nhất?", "opts": ["A. Hoạt động thực nghiệm khoa học", "B. Hoạt động chính trị-xã hội", "C. Hoạt động sản xuất vật chất", "D. Hoạt động giáo dục và đào tạo"], "ans": 2}, {"q": "22. Theo Chủ nghĩa duy vật lịch sử, muốn tồn tại và phát triển, trước tiên con người phải làm gì?", "opts": ["A. Phải làm chính trị, khoa học, nghệ thuật", "B. Phải lao động sản xuất ra của cải vật chất", "C. Phải xây dựng kiến trúc thượng tầng", "D. Phải làm cách mạng xã hội"], "ans": 1}, {"q": "23. Phương thức sản xuất là gì?", "opts": ["A. Mối quan hệ giữa con người với giới tự nhiên", "B. Mối quan hệ giữa người với người trong quá trình sản xuất", "C. Cách thức tiến hành sản xuất vật chất trong một giai đoạn nhất định của lịch sử", "D. Toàn bộ quan hệ sản xuất hợp thành cơ sở hạ tầng"], "ans": 2}, {"q": "24. Lực lượng sản xuất là mối quan hệ nào?", "opts": ["A. Mối quan hệ giữa người với người trong sản xuất", "B. Mối quan hệ giữa con người với giới tự nhiên, là trình độ chinh phục tự nhiên của con người", "C. Mối quan hệ giữa quan hệ sản xuất và kiến trúc thượng tầng", "D. Mối quan hệ giữa giai cấp công nhân và giai cấp tư sản"], "ans": 1}, {"q": "25. Toàn bộ những quan hệ sản xuất hợp thành cơ cấu của hình thái kinh tế-xã hội được gọi là gì?", "opts": ["A. Kiến trúc thượng tầng", "B. Cơ sở hạ tầng", "C. Phương thức sản xuất", "D. Lực lượng sản xuất"], "ans": 1}, {"q": "26. Kiến trúc thượng tầng là toàn bộ những gì được hình thành trên cơ sở hạ tầng nhất định?", "opts": ["A. Toàn bộ lực lượng sản xuất", "B. Toàn bộ quan hệ sở hữu đối với tư liệu sản xuất", "C. Toàn bộ những quan điểm tư tưởng chính trị, pháp quyền, đạo đức, nghệ thuật, tôn giáo, triết học... và những thiết chế tương ứng", "D. Toàn bộ hoạt động sản xuất vật chất của con người"], "ans": 2}, {"q": "27. Trong cơ sở hạ tầng, quan hệ sản xuất nào giữ vai trò chủ đạo và chi phối các quan hệ sản xuất khác?", "opts": ["A. Quan hệ sản xuất còn lại của hình thái kinh tế-xã hội trước đó", "B. Quan hệ sản xuất của hình thái kinh tế-xã hội tương lai", "C. Quan hệ sản xuất thống trị", "D. Quan hệ tổ chức quản lý"], "ans": 2}, {"q": "28. Cách mạng xã hội được định nghĩa là gì?", "opts": ["A. Là sự vận động diễn ra theo khuynh hướng đi lên, đi xuống", "B. Là sự tự phủ định do mâu thuẫn bên trong sự vật", "C. Là bước nhảy vọt về chất trong sự phát triển xã hội, là sự thay thế hình thái kinh tế-xã hội này bằng hình thái kinh tế-xã hội khác, tiến bộ hơn", "D. Là sự đấu tranh của các mặt đối lập"], "ans": 2}, {"q": "29. Theo học thuyết giá trị của C.Mác, cơ sở của giá trị hàng hoá là gì?", "opts": ["A. Giá trị sử dụng của hàng hóa", "B. Giá cả của hàng hóa", "C. Lao động (quan hệ giữa người với người thông qua quan hệ trao đổi hàng hoá)", "D. Giá trị trao đổi của hàng hóa"], "ans": 2}, {"q": "30. Theo định nghĩa của Đại hội XI của Đảng (2011), Tư tưởng Hồ Chí Minh là kết quả của sự vận dụng và phát triển sáng tạo Chủ nghĩa Mác-Lênin vào điều kiện cụ thể của đâu?", "opts": ["A. Thế giới trong giai đoạn chủ nghĩa đế quốc", "B. Nước ta (Việt Nam)", "C. Phong trào cộng sản quốc tế", "D. Các nước thuộc địa và nửa thuộc địa"], "ans": 1}, {"q": "31. Nguồn gốc thực tiễn nào đã thúc đẩy Hồ Chí Minh sớm suy ngẫm về sự thất bại của các phong trào yêu nước và tìm con đường mới?", "opts": ["A. Sự phát triển mạnh mẽ của khoa học kỹ thuật", "B. Sự ra đời của Quốc tế Cộng sản", "C. Thực dân Pháp xâm lược Việt Nam, nhân dân mất nước trở thành nô lệ, các cuộc khởi nghĩa chống Pháp liên tục thất bại", "D. Thắng lợi của Cách mạng tháng Mười Nga năm 1917"], "ans": 2}, {"q": "32. Tinh hoa văn hóa phương Tây nào đã được Nguyễn Tất Thành tiếp thu khi còn nhỏ và trong thời gian ở nước ngoài?", "opts": ["A. Nho giáo và Phật giáo", "B. Tư tưởng của Khổng Tử và Mạnh Tử", "C. Tư tưởng của cách mạng Mỹ (1776), Đại cách mạng Pháp (1789), đạo đức của Thiên chúa giáo", "D. Chủ nghĩa xã hội khoa học"], "ans": 2}, {"q": "33. Sự kiện nào đánh dấu bước chuyển về chất trong lập trường chính trị của Nguyễn Ái Quốc, từ một người yêu nước trở thành người cộng sản?", "opts": ["A. Rời bến Nhà Rồng ra nước ngoài tìm đường cứu nước (1911)", "B. Hoạt động trong những người Việt Nam yêu nước ở Pari (1917)", "C. Viết tác phẩm Đường Kách mệnh (1927)", "D. Tiếp thu và đi theo chủ nghĩa Mác-Lênin, tham gia sáng lập Đảng Cộng sản Pháp (1920)"], "ans": 3}, {"q": "34. Giai đoạn nào (1911-1920) trong quá trình hình thành tư tưởng Hồ Chí Minh được gọi là thời kỳ trải nghiệm cuộc sống và đến với chủ nghĩa Mác-Lênin?", "opts": ["A. Thời kỳ niên thiếu", "B. Thời kỳ Người đi qua nhiều nước và sống ở Mỹ, Anh, Pháp", "C. Thời kỳ Người bị bắt và cầm tù ở Hồng Công", "D. Thời kỳ Người trở về Pắc Bó, Cao Bằng (1941)"], "ans": 1}, {"q": "35. Trong Di chúc, Hồ Chí Minh khẳng định sự tất thắng của cuộc đấu tranh nào?", "opts": ["A. Cuộc đấu tranh chống tham nhũng", "B. Cuộc kháng chiến chống Mỹ cứu nước", "C. Cuộc đấu tranh chống giặc dốt", "D. Cuộc kháng chiến chống thực dân Pháp"], "ans": 1}, {"q": "36. Luận điểm nào sau đây thuộc nội dung cơ bản về độc lập dân tộc gắn liền với chủ nghĩa xã hội trong tư tưởng Hồ Chí Minh?", "opts": ["A. Chủ nghĩa xã hội là quá trình diễn ra một sớm một chiều", "B. Phải đấu tranh giai cấp là nhiệm vụ hàng đầu", "C. \"Muốn cứu nước và giải phóng dân tộc, không có con đường nào khác ngoài con đường cách mạng vô sản”", "D. Độc lập dân tộc phải tách rời chủ nghĩa xã hội"], "ans": 2}, {"q": "37. Theo Hồ Chí Minh, “Nước ta là nước dân chủ, nghĩa là nước nhà do nhân dân làm chủ”, do đó, Đảng, Chính phủ, cán bộ, đảng viên có vai trò gì?", "opts": ["A. Là người lãnh đạo và chỉ đạo tuyệt đối", "B. Là đày tớ và làm đày tớ cho dân", "C. Là người quản lý và giám sát nhân dân", "D. Là đại diện của giai cấp vô sản"], "ans": 1}, {"q": "38. Theo Hồ Chí Minh, Nhà nước do dân là Nhà nước như thế nào?", "opts": ["A. Nhà nước do Đảng Cộng sản lãnh đạo", "B. Nhà nước lấy lợi ích chính đáng của nhân dân làm mục tiêu", "C. Nhà nước do dân tạo ra và nhân dân tham gia quản lý", "D. Nhà nước có tất cả mọi quyền lực"], "ans": 2}, {"q": "39. Theo tư tưởng Hồ Chí Minh, để bảo đảm cho quyền tự do, dân chủ của người dân được tôn trọng trong thực tế, cần xây dựng gì?", "opts": ["A. Chế độ công hữu về tư liệu sản xuất", "B. Một nền pháp chế xã hội chủ nghĩa", "C. Một chính sách ngoại giao mềm dẻo", "D. Một quân đội hùng mạnh"], "ans": 1}, {"q": "40. Hồ Chí Minh đã đúc kết về sức mạnh đoàn kết toàn dân tộc bằng câu nói nổi tiếng nào?", "opts": ["A. \"Làm theo năng lực, hưởng theo nhu cầu\"", "B. \"Thóc không thiếu một cân, quân không thiếu một người\"", "C. \"Đoàn kết, đoàn kết, đại đoàn kết; Thành công, thành công, đại thành công\"", "D. \"Dễ mười lần không dân cũng chịu, khó trăm lần dân liệu cũng xong\""], "ans": 2}, {"q": "41. Để đoàn kết toàn dân tộc, cần phải thực hiện thông qua tổ chức nào?", "opts": ["A. Chính phủ", "B. Mặt trận dân tộc thống nhất", "C. Hội Liên hiệp thuộc địa", "D. Quốc hội"], "ans": 1}, {"q": "42. Luận điểm \"Có thực mới vực được đạo\" được Hồ Chí Minh sử dụng để nhấn mạnh tầm quan trọng của yếu tố nào trong xây dựng chủ nghĩa xã hội?", "opts": ["A. Văn hóa", "B. Chính trị", "C. Kinh tế (phát triển kinh tế phải đi trước một bước)", "D. Đạo đức"], "ans": 2}, {"q": "43. Theo Hồ Chí Minh, mục tiêu phát triển kinh tế là vì ai?", "opts": ["A. Vì con người, để mọi người dân có ăn, có mặc, có chỗ ở và được học hành", "B. Vì lợi ích của Đảng và Chính phủ", "C. Vì lợi ích của giai cấp vô sản", "D. Vì mục tiêu tăng cường sức mạnh quốc phòng"], "ans": 0}, {"q": "44. Hồ Chí Minh đã chỉ rõ cần phải diệt \"giặc đói\" đồng thời phải diệt \"giặc dốt\", vì sao?", "opts": ["A. Vì giặc dốt là nguồn gốc của chiến tranh", "B. Vì người dốt dễ bị kẻ thù lừa gạt", "C. Vì \"một dân tộc dốt là một dân tộc yếu\"", "D. Vì người dốt không thể tham gia sản xuất"], "ans": 2}, {"q": "45. Theo Hồ Chí Minh, phẩm chất nào của người cách mạng là cái gốc?", "opts": ["A. Tài năng", "B. Trí tuệ", "C. Đạo đức", "D. Kinh nghiệm"], "ans": 2}, {"q": "46. Phẩm chất \"Yêu thương con người\" trong chuẩn mực đạo đức cách mạng của Hồ Chí Minh nhấn mạnh tình cảm đối với ai?", "opts": ["A. Tất cả những người cùng chung lý tưởng", "B. Yêu thương mọi người, nhất là những người lao động nghèo khổ", "C. Yêu thương cán bộ, đảng viên", "D. Yêu thương những người có tài năng"], "ans": 1}, {"q": "47. Chuẩn mực đạo đức nào sau đây được Hồ Chí Minh coi là chuẩn mực đạo đức trung tâm, là thước đo bản chất của mỗi con người?", "opts": ["A. Trung với nước, hiếu với dân", "B. Yêu thương con người", "C. Có tinh thần quốc tế trong sáng", "D. Cần, kiệm, liêm, chính, chí công vô tư"], "ans": 3}, {"q": "48. Về con đường rèn luyện đạo đức, Hồ Chí Minh khẳng định đạo đức cách mạng không phải là thứ có sẵn mà do đâu mà nên?", "opts": ["A. Do tài năng bẩm sinh", "B. Do sự giáo dục từ gia đình", "C. Do tu dưỡng, rèn luyện mà nên", "D. Do điều kiện kinh tế xã hội quyết định"], "ans": 2}, {"q": "49. Một trong những nguyên tắc xây dựng đạo đức cách mạng theo Hồ Chí Minh là gì?", "opts": ["A. Xây dựng đạo đức cách mạng phải gắn liền với đấu tranh chống chủ nghĩa cá nhân", "B. Chỉ cần tu dưỡng đạo đức trong một giai đoạn nhất định", "C. Đạo đức được rèn luyện trong môi trường biệt lập với xã hội", "D. Lấy thành tích công tác làm tiêu chuẩn duy nhất"], "ans": 0}, {"q": "50. Hồ Chí Minh coi tuổi trẻ là gì của nhân loại?", "opts": ["A. Lực lượng kế thừa cách mạng", "B. Mùa xuân của nhân loại", "C. Người chủ tương lai của đất nước", "D. Nguồn lực dồi dào nhất"], "ans": 1}, {"q": "51. Theo Hồ Chí Minh, nội dung giáo dục thế hệ trẻ phải toàn diện, bao gồm những mặt nào?", "opts": ["A. Chỉ chú trọng văn hóa, kỹ thuật", "B. Đạo đức cách mạng, văn hóa, kỹ thuật, lao động và sản xuất", "C. Chỉ chú trọng đạo đức và lý tưởng", "D. Chỉ chú trọng thể chất và thẩm mỹ"], "ans": 1}, {"q": "52. Phong cách tư duy của Hồ Chí Minh được mô tả là phong cách gì?", "opts": ["A. Luôn chấp nhận lối mòn của tư duy cũ", "B. Chủ yếu dựa trên kinh nghiệm cá nhân", "C. Khoa học, cách mạng, độc lập, tự chủ và sáng tạo", "D. Xuất phát từ chân lý trừu tượng"], "ans": 2}, {"q": "53. Trong phong cách làm việc của Hồ Chí Minh, Người là mẫu mực của phong cách làm việc nào?", "opts": ["A. Chính xác, đúng giờ", "B. Nóng vội, nhanh chóng", "C. Dựa vào trực giác", "D. Đặt kế hoạch đẹp mắt, to tát"], "ans": 0}, {"q": "54. Phong cách lãnh đạo của Hồ Chí Minh thể hiện ở việc tuân thủ nghiêm nguyên tắc nào?", "opts": ["A. Tập trung dân chủ, tập thể lãnh đạo, cá nhân phụ trách", "B. Chuyên quyền và độc đoán", "C. Duy trì khoảng cách với cấp dưới", "D. Thường xuyên ủy quyền cho cấp phó"], "ans": 0}, {"q": "55. Hồ Chí Minh thường xuyên đi thăm các địa phương, công trường, xí nghiệp... để làm gì?", "opts": ["A. Để tìm kiếm vật liệu mới", "B. Để vận động quần chúng nhân dân", "C. Để xem xét tình hình, kiểm tra công việc", "D. Để tuyển chọn nhân tài"], "ans": 2}, {"q": "56. Điều gì được coi là \"tấm gương mẫu mực\" của Hồ Chí Minh trong thực hành đạo đức?", "opts": ["A. Sự linh hoạt, tùy biến trong mọi tình huống", "B. Thống nhất tư tưởng đạo đức và hành vi đạo đức, nói đi đôi với làm", "C. Luôn đặt mình cao hơn người khác", "D. Thường xuyên sử dụng ngôn ngữ học thuật"], "ans": 1}, {"q": "57. Cuộc cách mạng nào ở châu Á đã có tác động đến nhiều nước, thu hút sự quan tâm của nhiều người yêu nước Việt Nam đầu thế kỷ XX?", "opts": ["A. Cách mạng Tháng Mười Nga (1917)", "B. Cuộc cách mạng Tân Hợi (1910-1911) ở Trung Quốc", "C. Cách mạng tư sản Pháp (1789)", "D. Cách mạng Mỹ (1776)"], "ans": 1}, {"q": "58. Chính sách cai trị nào của thực dân Pháp ở Việt Nam đã làm cho nền kinh tế Việt Nam phụ thuộc nặng nề vào Pháp?", "opts": ["A. Chính sách \"chia để trị\" về chính trị", "B. Chính sách nô dịch về văn hóa", "C. Đầu tư lập đồn điền, tập trung vào ngành khai mỏ, độc quyền về ngoại thương và tài chính, đặt ra hàng trăm thứ thuế", "D. Chính sách duy trì triều đình phong kiến nhà Nguyễn"], "ans": 2}, {"q": "59. Theo nguồn tài liệu, cuối thế kỷ XIX, đầu thế kỷ XX, phong trào cách mạng Việt Nam đã rơi vào tình trạng như thế nào?", "opts": ["A. Đã tìm ra con đường cứu nước đúng đắn", "B. Đã hình thành được giai cấp lãnh đạo mới", "C. Khủng hoảng, bế tắc về đường lối cứu nước và giai cấp lãnh đạo cách mạng, ví như đi “trong đêm tối không có đường ra”", "D. Chỉ còn phong trào đấu tranh tự phát của công nhân"], "ans": 2}, {"q": "60. Sau khi trở thành người cộng sản Việt Nam đầu tiên (1920), Nguyễn Ái Quốc đã thành lập tổ chức nào để tố cáo tội ác của thực dân Pháp?", "opts": ["A. Hội Liên hiệp thuộc địa, ra báo Người cùng khổ", "B. Hội Việt Nam cách mạng thanh niên", "C. Đảng Cộng sản Đông Dương", "D. Chi bộ cộng sản đầu tiên ở Việt Nam"], "ans": 0}, {"q": "61. Theo tác phẩm \"Đường kách mệnh\" (1927), Nguyễn Ái Quốc đã chuẩn bị chu đáo về những mặt nào cho việc thành lập Đảng Cộng sản Việt Nam?", "opts": ["A. Quân sự và tài chính", "B. Chính trị, tư tưởng và tổ chức, cán bộ", "C. Ngoại giao và khoa học", "D. Văn hóa và giáo dục"], "ans": 1}, {"q": "62. Ba tổ chức cộng sản ở Việt Nam được thành lập riêng rẽ vào năm 1929 là những tổ chức nào?", "opts": ["A. Tổng Công hội đỏ, Hội Việt Nam cách mạng thanh niên, Đảng Cộng sản Đông Dương", "B. Đông Dương Cộng sản Đảng, An Nam Cộng sản Đảng và Đông Dương Cộng sản Liên đoàn", "C. Tân Việt cách mạng đảng, Đông Dương Cộng sản Đảng, Tổng Công hội đỏ", "D. Quốc dân Đảng, Đông Dương Cộng sản Liên đoàn, An Nam Cộng sản Đảng"], "ans": 1}, {"q": "63. Hội nghị hợp nhất các tổ chức cộng sản diễn ra tại đâu?", "opts": ["A. Quảng Châu, Trung Quốc", "B. Paris, Pháp", "C. Bán đảo Cửu Long, Hương Cảng (Trung Quốc)", "D. Số nhà 5D, phố Hàm Long (Hà Nội)"], "ans": 2}, {"q": "64. Các văn kiện nào được Hội nghị hợp nhất các tổ chức cộng sản thông qua đã hợp thành Cương lĩnh chính trị đầu tiên của Đảng?", "opts": ["A. Di chúc và Tuyên ngôn độc lập", "B. Chánh cương vắn tắt, Sách lược vắn tắt, Chương trình tóm tắt", "C. Luận Cương chính trị và Điều lệ sơ lược", "D. Tuyên ngôn của Đảng cộng sản và Bộ Tư bản"], "ans": 1}, {"q": "65. Cương lĩnh chính trị đầu tiên của Đảng xác định nhiệm vụ về thổ địa cách mạng là gì?", "opts": ["A. Đánh đổ đế quốc Pháp và phong kiến", "B. Tịch thu hết ruộng đất của đế quốc Pháp để làm của công và chia cho dân cày nghèo", "C. Thủ tiêu hết các thứ quốc trái", "D. Thi hành luật ngày làm 8 giờ"], "ans": 1}, {"q": "66. Trong Cương lĩnh chính trị đầu tiên, Đảng xác định lực lượng cách mạng phải thu phục cho được đại bộ phận giai cấp nào?", "opts": ["A. Giai cấp tư sản", "B. Giai cấp dân cày (nông dân) và phải dựa vững vào dân cày nghèo", "C. Giai cấp trí thức và tiểu tư sản", "D. Giai cấp vô sản"], "ans": 1}, {"q": "67. Ý nghĩa của sự ra đời Đảng Cộng sản Việt Nam năm 1930 là gì?", "opts": ["A. Khẳng định giai cấp nông dân là lực lượng lãnh đạo cách mạng", "B. Chấm dứt thời kỳ bế tắc, khủng hoảng về đường lối cứu nước và giai cấp lãnh đạo cách mạng ở Việt Nam", "C. Mở đầu giai đoạn đấu tranh chính trị ôn hòa", "D. Mở ra thời kỳ Chủ nghĩa Mác-Lênin bị phê phán"], "ans": 1}, {"q": "68. Sự kiện nào sau đây được coi là nhân tố hàng đầu quyết định thắng lợi của Cách mạng Tháng Tám năm 1945?", "opts": ["A. Sự thất bại của phát xít Nhật", "B. Sự lãnh đạo đúng đắn của Đảng (với các chủ trương phát triển đường lối cách mạng)", "C. Sự tham gia của quân Đồng Minh", "D. Việc thành lập Việt Nam Tuyên truyền giải phóng quân (12-1944)"], "ans": 1}, {"q": "69. Sự kiện nào đã khai sinh ra nước Việt Nam dân chủ Cộng hoà vào ngày 2-9-1945?", "opts": ["A. Hội nghị cán bộ toàn quốc của Đảng", "B. Chiến dịch Điện Biên Phủ", "C. Chủ tịch Hồ Chí Minh thay mặt Chính phủ lâm thời đọc Tuyên ngôn độc lập tại Quảng trường Ba Đình, Hà Nội", "D. Thường vụ Trung ương Đảng ra Chỉ thị “Nhật Pháp bắn nhau và hành động của chúng ta”"], "ans": 2}, {"q": "70. Thắng lợi của Cách mạng Tháng Tám năm 1945 đã đưa dân tộc ta tiến vào kỷ nguyên nào?", "opts": ["A. Kỷ nguyên xây dựng chủ nghĩa xã hội", "B. Kỷ nguyên công nghiệp hóa, hiện đại hóa", "C. Kỷ nguyên đấu tranh giai cấp", "D. Kỷ nguyên độc lập, tự do"], "ans": 3}, {"q": "71. Mục đích ký Hiệp định sơ bộ (6-3-1946) với Pháp của Chủ tịch Hồ Chí Minh là gì?", "opts": ["A. Tuyên bố chấm dứt chiến tranh với Pháp", "B. Tránh tình trạng một lúc phải đối đầu với nhiều kẻ thù, bảo toàn thực lực, tranh thủ thời gian hoà hoãn", "C. Công nhận nền thống trị của Pháp ở miền Nam", "D. Thiết lập chế độ dân chủ nhân dân"], "ans": 1}, {"q": "72. Đường lối kháng chiến chống Pháp (1945-1954) của Đảng được thể hiện trong các văn kiện nào?", "opts": ["A. Cương lĩnh chính trị đầu tiên (1930)", "B. Bản Chỉ thị “Kháng chiến kiến quốc”, “Lời kêu gọi Toàn quốc kháng chiến” và tác phẩm Kháng chiến nhất định thắng lợi", "C. Sơ thảo lần thứ nhất những luận cương về các vấn đề dân tộc và vấn đề thuộc địa", "D. Tuyên ngôn Độc lập"], "ans": 1}, {"q": "73. Chiến thắng nào đã buộc thực dân Pháp phải chấm dứt chiến tranh, lập lại hoà bình ở Đông Dương và ký kết Hiệp định Giơnevơ (21-7-1954)?", "opts": ["A. Chiến thắng Việt Bắc Thu Đông 1947", "B. Chiến thắng Biên Giới 1950", "C. Chiến thắng lịch sử Điện Biên Phủ", "D. Tổng tiến công và nổi dậy Xuân 1968"], "ans": 2}, {"q": "74. Sau năm 1954, tình hình đất nước ta như thế nào?", "opts": ["A. Đất nước thống nhất, cả nước quá độ lên chủ nghĩa xã hội", "B. Đất nước chia làm hai miền, miền Bắc thực hiện quá độ lên chủ nghĩa xã hội, miền Nam trở thành thuộc địa kiểu mới của Mỹ", "C. Miền Bắc tiếp tục kháng chiến chống Pháp, miền Nam được giải phóng", "D. Cả hai miền cùng thực hiện chiến lược cách mạng dân tộc dân chủ nhân dân"], "ans": 1}, {"q": "75. Đại hội lần thứ III của Đảng (9-1960) đã chủ trương đồng thời thực hiện hai nhiệm vụ chiến lược nào?", "opts": ["A. Xây dựng chủ nghĩa xã hội ở miền Bắc, đấu tranh hoà bình thống nhất nước nhà", "B. Đánh đổ đế quốc Mỹ và tay sai, giải phóng miền Nam", "C. Tiến hành Chiến tranh đặc biệt và Chiến tranh cục bộ", "D. Xây dựng nền kinh tế tư bản độc quyền và kinh tế thị trường"], "ans": 0}, {"q": "76. Chiến lược nào của Mỹ đã bị phá sản sau thắng lợi của cuộc Tổng công kích và nổi dậy mùa Xuân năm 1968 của quân dân miền Nam?", "opts": ["A. Chiến lược “Chiến tranh đặc biệt”", "B. Chiến lược “Việt Nam hoá chiến tranh”", "C. Chiến lược “Chiến tranh cục bộ”", "D. Chiến lược toàn cầu"], "ans": 2}, {"q": "77. Chiến thắng nào đã buộc đế quốc Mỹ phải ký kết Hiệp định Pari (1-1973), công nhận độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Việt Nam?", "opts": ["A. Chiến thắng Tết Mậu Thân 1968", "B. Chiến thắng trận “Điện Biên Phủ trên không” (1972) của quân dân Hà Nội", "C. Chiến dịch Hồ Chí Minh 1975", "D. Chiến dịch Tây Nguyên 1975"], "ans": 1}, {"q": "78. Thắng lợi của cuộc chống Mỹ, cứu nước (1954-1975) đã mở ra kỷ nguyên mới nào cho dân tộc ta?", "opts": ["A. Kỷ nguyên tự do dân chủ", "B. Kỷ nguyên phát triển kinh tế thị trường", "C. Kỷ nguyên cả nước hòa bình, thống nhất, cùng chung một nhiệm vụ chiến lược, đi lên chủ nghĩa xã hội", "D. Kỷ nguyên hội nhập quốc tế"], "ans": 2}, {"q": "79. Theo đánh giá, Cách mạng xã hội chủ nghĩa ở miền Bắc giữ vai trò như thế nào đối với sự nghiệp đấu tranh thống nhất nước nhà?", "opts": ["A. Vai trò quyết định trực tiếp", "B. Vai trò bổ sung", "C. Vai trò quyết định nhất", "D. Vai trò hỗ trợ"], "ans": 2}, {"q": "80. Về mặt nhà nước, Đảng đã lãnh đạo hoàn thành thống nhất đất nước nhanh chóng sau khi giải phóng miền Nam vào thời điểm nào?", "opts": ["A. Năm 1975, ngay sau chiến thắng", "B. Trước Đại hội lần thứ IV của Đảng (12-1976)", "C. Sau Đại hội V của Đảng (1982)", "D. Sau Hội nghị Trung ương 6 (1979)"], "ans": 1}, {"q": "81. Đại hội V của Đảng (3-1982) đã xác định hai nhiệm vụ chiến lược của cách mạng Việt Nam là gì?", "opts": ["A. Công nghiệp hóa và hiện đại hóa", "B. Xây dựng thành công chủ nghĩa xã hội và bảo vệ vững chắc Tổ quốc Việt Nam xã hội chủ nghĩa", "C. Hoàn thiện thể chế kinh tế và phát triển nguồn nhân lực chất lượng cao", "D. Đấu tranh chống giặc đói, giặc dốt"], "ans": 1}, {"q": "82. Hành động nào của quân và dân Việt Nam năm 1979 được nhân dân Campuchia và thế giới ghi nhận là chính nghĩa, xuất phát từ yêu cầu tự vệ chính đáng?", "opts": ["A. Tham gia đàm phán với Trung Quốc để giải quyết tranh chấp biên giới", "B. Phối hợp và giúp đỡ quân dân Campuchia tổng tiến công, giải phóng Phnôm Pênh, xóa bỏ chế độ diệt chủng Khơme đỏ - Pôn Pốt", "C. Tiến hành chiến tranh bảo vệ biên giới phía Bắc", "D. Đấu tranh thắng lợi chống FULRO ở Tây Nguyên"], "ans": 1}, {"q": "83. Sau 10 năm (1975-1986), đất nước ta lâm vào khủng hoảng kinh tế-xã hội kéo dài, nguyên nhân chủ quan là do đâu?", "opts": ["A. Hậu quả nặng nề của 30 năm chiến tranh", "B. Bị bao vây, cấm vận nhiều năm", "C. Xây dựng đất nước từ nền kinh tế nghèo nàn, lạc hậu", "D. Những sai lầm nghiêm trọng và kéo dài về chủ trương, chính sách lớn, sai lầm về chỉ đạo chiến lược và tổ chức thực hiện"], "ans": 3}, {"q": "84. Nghị quyết 57-NQ/TW (22/12/2024) của Bộ Chính trị về đột phá phát triển khoa học, công nghệ tập trung vào lĩnh vực nào?", "opts": ["A. Khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số quốc gia", "B. Tăng cường quốc phòng an ninh", "C. Đẩy mạnh công nghiệp hóa, hiện đại hóa", "D. Hoàn thiện hệ thống pháp luật"], "ans": 0}, {"q": "85. Theo quan điểm phát triển kinh tế-xã hội, mối quan hệ giữa phát triển nhanh và phát triển bền vững phải như thế nào?", "opts": ["A. Phát triển bền vững là cơ sở, phát triển nhanh là yếu tố quan trọng", "B. Phát triển nhanh và bền vững phải luôn gắn chặt với nhau trong quy hoạch, kế hoạch và chính sách phát triển kinh tế-xã hộ", "C. Phát triển nhanh phải ưu tiên hàng đầu, sau đó mới tính đến bền vững", "D. Chỉ cần chú trọng phát triển theo chiều sâu, không cần quan tâm đến tốc độ"], "ans": 1}, {"q": "86. Trong định hướng lớn phát triển kinh tế-xã hội, quan hệ phân phối phải bảo đảm nguyên tắc gì?", "opts": ["A. Phân phối hoàn toàn theo kết quả lao động", "B. Phân phối theo mức đóng góp vốn", "C. Bảo đảm công bằng và tạo động lực cho phát triển; thực hiện chế độ phân phối chủ yếu theo kết quả lao động, hiệu quả kinh tế, đồng thời theo mức đóng góp vốn cùng các nguồn lực khác và phân phối thông qua hệ thống an sinh xã hội", "D. Chỉ phân phối thông qua hệ thống an sinh xã hội"], "ans": 2}, {"q": "87. Theo quan điểm phát triển văn hóa, văn hóa là gì của xã hội?", "opts": ["A. Là công cụ để phát triển kinh tế", "B. Là nền tảng tinh thần của xã hội, là mục tiêu, động lực phát triển bền vững đất nước", "C. Là phương tiện để giải phóng giai cấp", "D. Là yếu tố được ưu tiên sau kinh tế và chính trị"], "ans": 1}, {"q": "88. Trọng tâm trong xây dựng văn hóa là gì?", "opts": ["A. Bảo tồn và phát huy các giá trị văn hóa truyền thống", "B. Phát triển công nghiệp văn hóa", "C. Chăm lo xây dựng con người có nhân cách, lối sống tốt đẹp", "D. Đấu tranh chống lại cái xấu, cái ác"], "ans": 2}, {"q": "89. Phát triển giáo dục và đào tạo cùng với phát triển khoa học và công nghệ được xác định là gì?", "opts": ["A. Yếu tố quyết định phát triển xã hội", "B. Quốc sách hàng đầu; đầu tư cho giáo dục và đào tạo là đầu tư phát triển", "C. Trách nhiệm của gia đình và nhà trường", "D. Nhiệm vụ của Chính phủ"], "ans": 1}, {"q": "90. Trong chiến lược phát triển con người Việt Nam, cần xây dựng lối sống nào?", "opts": ["A. Lối sống tự do, không ràng buộc bởi trách nhiệm xã hội", "B. Lối sống đề cao chủ nghĩa cá nhân và lợi ích bản thân", "C. Lối sống “Mỗi người vì mọi người, mọi người vì mỗi người”", "D. Lối sống hướng tới phát triển thể lực và trí tuệ"], "ans": 2}, {"q": "91. Trong quá trình đổi mới mô hình tăng trưởng kinh tế, Việt Nam chuyển mạnh từ chủ yếu dựa vào xuất khẩu và vốn đầu tư sang phát triển đồng thời dựa vào các yếu tố nào?", "opts": ["A. Chỉ dựa vào xuất khẩu và thị trường trong nước", "B. Dựa cả vào vốn đầu tư, xuất khẩu và thị trường trong nước", "C. Chỉ dựa vào nội lực và thị trường trong nước", "D. Dựa vào doanh nghiệp FDI và khu vực sản xuất nông nghiệp"], "ans": 1}, {"q": "92. Một trong những giải pháp quan trọng để phát triển nông nghiệp và kinh tế nông thôn là gì?", "opts": ["A. Chỉ tập trung phát triển công nghiệp hóa nông thôn", "B. Duy trì sản xuất nhỏ lẻ, truyền thống", "C. Xây dựng nền nông nghiệp theo hướng sản xuất hàng hóa lớn, ứng dụng công nghệ cao, nâng cao chất lượng sản phẩm, đảm bảo an toàn vệ sinh thực phẩm", "D. Ưu tiên phát triển kinh tế đô thị, giảm kết nối nông thôn-đô thị"], "ans": 2}, {"q": "93. Nền kinh tế thị trường định hướng xã hội chủ nghĩa Việt Nam được xác định là nền kinh tế vận hành đầy đủ, đồng bộ theo các quy luật nào?", "opts": ["A. Quy luật của kinh tế xã hội chủ nghĩa", "B. Quy luật của kinh tế thị trường, đồng thời bảo đảm định hướng xã hội chủ nghĩa", "C. Quy luật của kinh tế tri thức và hội nhập quốc tế", "D. Quy luật cung cầu, không cần sự quản lý của Nhà nước."], "ans": 1}, {"q": "94. Theo Hiến pháp năm 2013, công dân có quyền tự do gì trong lĩnh vực tôn giáo?", "opts": ["A. Quyền tự do không theo tôn giáo nào, nhưng không có quyền tự do tín ngưỡng", "B. Quyền tự do tín ngưỡng, tôn giáo, theo hoặc không theo một tôn giáo nào", "C. Quyền tự do tín ngưỡng nếu được Nhà nước cho phép", "D. Quyền tự do tín ngưỡng, nhưng phải theo tôn giáo truyền thống"], "ans": 1}, {"q": "95. Theo quy định của Hiến pháp, công dân có nghĩa vụ gì về tài chính đối với Nhà nước?", "opts": ["A. Nghĩa vụ sử dụng thu nhập hợp pháp để đầu tư sản xuất", "B. Nghĩa vụ nộp thuế theo quy định của pháp luật", "C. Nghĩa vụ phát triển kinh doanh theo quy định của pháp luật", "D. Nghĩa vụ thừa kế tài sản"], "ans": 1}, {"q": "96. Trong Di chúc, Hồ Chí Minh viết rằng: \"Đầu tiên là công việc đối với...\" ai?", "opts": ["A. Đảng và Chính phủ", "B. Con người", "C. Dân tộc", "D. Thanh niên"], "ans": 1}, {"q": "97. Người học được đào tạo nghề phải thể hiện mình là người có những phẩm chất nào để trở thành một người công dân tốt?", "opts": ["A. Có tri thức, sức khỏe, lao động giỏi", "B. Có kiến thức, có kỹ năng, có hành động đúng với quy tắc xử sự văn minh", "C. Giàu lòng yêu nước, có ý thức làm chủ", "D. Thạo nghề, tư duy sáng tạo"], "ans": 1}, {"q": "98. Người lao động tốt cần có phẩm chất chính trị vững vàng, trung với nước, hiếu với dân, đồng thời cần có tinh thần gì?", "opts": ["A. Tinh thần đối phó với kẻ thù", "B. Tinh thần tự cường dân tộc", "C. Tinh thần chiến đấu tuyệt đối", "D. Tinh thần quốc tế vô sản"], "ans": 1}, {"q": "99. Bên cạnh việc có tay nghề thuần thục, người lao động tốt còn cần có khả năng sử dụng thành thạo những yếu tố nào để tạo ra năng suất lao động ngày càng cao?", "opts": ["A. Chỉ công cụ lao động truyền thống", "B. Các công cụ lao động, phương tiện ngày càng hiện đại", "C. Chỉ công nghệ thông tin", "D. Chỉ kiến thức chuyên môn thuần túy"], "ans": 1}, {"q": "100. Người lao động tốt cần có tinh thần tập thể như thế nào trong quan hệ với mọi người?", "opts": ["A. Luôn làm việc độc lập để đạt hiệu quả cao nhất", "B. Sống có tinh thần tập thể; có khả năng làm việc theo nhóm hoặc độc lập nhưng biết quan tâm vì lợi ích chung “mình vì mọi người”", "C. Chỉ tôn trọng những người có trình độ chuyên môn cao", "D. Luôn cạnh tranh để trở thành người giỏi nhất"], "ans": 1}, {"q": "101. Quá trình tu dưỡng, rèn luyện để trở thành người lao động tốt là quá trình như thế nào?", "opts": ["A. Là quá trình có thể có ngay thông qua bằng cấp, chứng chỉ", "B. Là quá trình rèn luyện trong thời gian ngắn", "C. Là quá trình tu dưỡng, rèn luyện mà hình thành", "D. Chỉ cần tập trung vào việc học lý thuyết"], "ans": 2}, {"q": "102. Tu dưỡng bản lĩnh chính trị đối với mỗi sinh viên là gì?", "opts": ["A. Là sự trung thành vô hạn với sự nghiệp xây dựng và bảo vệ Tổ quốc", "B. Là sự vững vàng, không dao động trước mọi khó khăn, gian khổ; kiên quyết đấu tranh chống lại mọi âm mưu và hoạt động sai trái “diễn biến hòa bình” của các thế lực thù địch", "C. Là việc học tập, nâng cao trình độ về mọi mặt", "D. Là việc rèn luyện đức tính cần cù, chăm chỉ"], "ans": 1}, {"q": "103. Theo Hồ Chí Minh, “Cần” là gì?", "opts": ["A. Lao động cần cù, siêng năng, có năng suất cao, không ỷ lại, không dựa dẫm", "B. Tiết kiệm sức lao động, tiết kiệm thì giờ, tiết kiệm tiền của dân, của nước", "C. Luôn tôn trọng, giữ gìn của công và sống trong sạch", "D. Thẳng thắn, đúng đắn, không tà, không tự cao, tự đại"], "ans": 0}, {"q": "104. Theo Hồ Chí Minh, “Kiệm” là gì?", "opts": ["A. Sống trong sạch, không tham tiền tài", "B. Tiết kiệm sức lao động, tiết kiệm thì giờ, tiết kiệm tiền của dân, của nước, của bản thân mình, tiết kiệm từ cái to đến cái nhỏ", "C. Lao động có kế hoạch, sáng tạo, có năng suất cao", "D. Đem lòng chí công vô tư đối với người, với việc"], "ans": 1}, {"q": "105. Theo Hồ Chí Minh, “Liêm” là gì?", "opts": ["A. Luôn tôn trọng, giữ gìn của công và sống trong sạch; \"Không tham tiền tài. Không tham sung sướng. Không ham người tâng bốc mình...”", "B. Thẳng thắn, đúng đắn, không tà", "C. Tiết kiệm sức lao động và thời gian", "D. Đặt việc công lên trên việc tư, việc nhà"], "ans": 0}, {"q": "106. Theo Hồ Chí Minh, “Chí công vô tư” là gì?", "opts": ["A. Là đức tính đối với người không nịnh trên, khinh dưới", "B. Là tiết kiệm của công và của tư", "C. Là đem lòng chí công vô tư đối với người, với việc, “khi làm bất cứ việc gì cũng đừng nghĩ đến mình trước, mà phải nghĩ đến đồng bào, đến toàn dân”", "D. Là chỉ lo hoàn thành nhiệm vụ cho tốt chứ không kèn cựa về mặt hưởng thụ"], "ans": 2}, {"q": "107. Khi có động cơ học tập đúng, người học cần làm gì để thích ứng với sự phát triển của cách mạng khoa học công nghệ hiện đại?", "opts": ["A. Chỉ cần rèn luyện phẩm chất đạo đức", "B. Luôn kiên định với phương pháp học tập cũ", "C. Chọn ngành nghề phù hợp với năng lực và lòng đam mê, rèn luyện kỹ năng, đạo đức nghề nghiệp, ý thức chấp hành kỷ luật, hình thành tác phong công nghiệp", "D. Tích cực tham gia các hoạt động xã hội"], "ans": 2}, {"q": "108. Trong quá trình học tập và rèn luyện, mỗi người học cần nhận thức rõ quyền và nghĩa vụ cụ thể của mình ở đâu?", "opts": ["A. Khi ở ngoài xã hội", "B. Khi đến lớp, khi tự nghiên cứu, khi ở trường, đi thực tế và ở ngoài xã hội", "C. Chỉ khi ở trường", "D. Chỉ khi đi thực tế sản xuất"], "ans": 1}, {"q": "109. Theo Hồ Chí Minh, người có tài mà không có đức là người như thế nào?", "opts": ["A. Người có khả năng làm được việc lớn", "B. Người vô dụng", "C. Người làm việc gì cũng khó", "D. Người dễ dàng thành công"], "ans": 1}, {"q": "110. Về phong cách và lối sống, người học cần rèn luyện đức tính nào?", "opts": ["A. Kiêu căng, tự mãn", "B. Chủ nghĩa cá nhân", "C. Khiêm tốn, giản dị", "D. Thói hám danh, hám lợi"], "ans": 2}, {"q": "111. Bên cạnh việc học ở trường, ở lớp, học thầy, người học còn cần học qua những nguồn nào?", "opts": ["A. Học từ kinh nghiệm của người đi trước", "B. Học qua sách vở tham khảo, học trong thực tiễn, học lẫn nhau, học nhân dân và biết tự học", "C. Học tập từ các tổ chức quốc tế", "D. Học tập từ các phương tiện truyền thông hiện đại"], "ans": 1}, {"q": "112. Tinh thần trách nhiệm với công việc của cá nhân trong các mối quan hệ xã hội là gì?", "opts": ["A. Hoàn thành công việc được giao đúng yêu cầu về mặt thời gian", "B. Xác định mình là một mắt khâu trong dây chuyền hoạt động làm ra sản phẩm cho xã hội để hoàn thành công việc được giao, đúng yêu cầu chất lượng, thời gian, hiệu quả và tiết kiệm", "C. Chỉ quan tâm đến lợi ích cá nhân", "D. Sáng tạo trong công việc mà không cần tiết kiệm"], "ans": 1}, {"q": "113. Trách nhiệm của cá nhân với gia đình là gì?", "opts": ["A. Chỉ cần cung cấp vật chất đầy đủ", "B. Đảm bảo kinh tế gia đình", "C. Xây dựng gia đình hạnh phúc, trách nhiệm với vợ (chồng), con cái, cha mẹ, họ hàng nội ngoại", "D. Đặt công việc lên trên gia đình"], "ans": 2}, {"q": "114. Trách nhiệm của cá nhân với toàn xã hội là gì?", "opts": ["A. Chỉ cần hoàn thành nghĩa vụ quân sự", "B. Xây dựng môi trường xanh, sạch, đẹp", "C. Rèn luyện trở thành người công dân tốt, có trách nhiệm, tuân thủ tự giác các quy định của pháp luật, thực hiện quyền và trách nhiệm làm chủ của mỗi công dân", "D. Góp phần xây dựng quê hương"], "ans": 2}, {"q": "115. Người học cần tích cực tham gia những hoạt động nào có ý nghĩa?", "opts": ["A. Những hoạt động mang lại lợi ích kinh tế cao", "B. Những hoạt động có ý nghĩa cho bản thân và có ích cho cộng đồng, xã hội", "C. Những hoạt động mang tính giải trí", "D. Những hoạt động tranh luận chính trị"], "ans": 1}, {"q": "116. Theo Hồ Chí Minh, ai là “đồng minh của kẻ thù” trong xây dựng đạo đức cách mạng?", "opts": ["A. Chủ nghĩa tự do", "B. Tham ô, lãng phí, quan liêu", "C. Chủ nghĩa cá nhân (thứ giặc “nội xâm”)", "D. Các luồng tư tưởng du nhập từ bên ngoài"], "ans": 2}, {"q": "117. Việc rèn luyện sức khỏe đối với người lao động tốt là để làm gì?", "opts": ["A. Để tham gia các hoạt động thể thao", "B. Để có đủ điều kiện sức khỏe làm việc tốt theo ngành nghề của mình", "C. Để có tầm vóc cao hơn", "D. Để có được sự nổi tiếng"], "ans": 1}, {"q": "118. Theo lời dặn của Hồ Chí Minh trong Di chúc, Đảng cần phải có kế hoạch thật tốt để phát triển những lĩnh vực nào nhằm không ngừng nâng cao đời sống vật chất và tinh thần của nhân dân?", "opts": ["A. Quốc phòng và an ninh", "B. Kinh tế và văn hóa", "C. Chính trị và tổ chức", "D. Khoa học và công nghệ"], "ans": 1}, {"q": "Câu 119: Trong quá trình học tập và rèn luyện, người học cần phải kiên quyết chống lại điều gì để đạt kết quả cao nhất?", "opts": ["A. Tinh thần tập thể và sự đoàn kết", "B. Việc học hỏi qua sách vở và thực tiễn", "C. Chủ nghĩa cá nhân, vụ lợi; không gian lận trong học tập và tiêu cực trong cuộc sống", "D. Việc giữ gìn đạo đức nghề nghiệp"], "ans": 2}, {"q": "Câu 120: Trong tu dưỡng, rèn luyện về văn hóa và chuyên môn, sinh viên phải phấn đấu để làm gì?", "opts": ["A. Chỉ cần có bằng cấp, chứng chỉ nghề", "B. Tập trung học các môn khoa học xã hội", "C. Chờ đợi cơ sở đào tạo kết nối với doanh nghiệp", "D. Học nghề nào phải phấn đấu để giỏi nghề đó"], "ans": 3}];
+const STORAGE_KEY = "gdct1_120_progress_v2";
+let userAnswers = {};
+let currentFilter = "all";
+
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) userAnswers = JSON.parse(saved);
+} catch (e) {}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers));
+  } catch (e) {}
+}
+
+function renderApp() {
+  const listEl = document.getElementById("questions-list");
+  const gridEl = document.getElementById("grid-container");
+  listEl.innerHTML = "";
+  gridEl.innerHTML = "";
+
+  QUESTIONS.forEach((item, index) => {
+    const qNum = index + 1;
+    const chosen = userAnswers[qNum];
+    const isAnswered = chosen !== undefined;
+    const isCorrect = isAnswered && chosen === item.ans;
+
+    // Grid button
+    const gBtn = document.createElement("button");
+    gBtn.className = "grid-item" + (isAnswered ? (isCorrect ? " correct" : " wrong") : "");
+    gBtn.textContent = qNum;
+    gBtn.dataset.id = qNum;
+    gBtn.onclick = () => {
+      if (currentFilter !== "all") {
+        setFilter("all");
+      }
+      document.getElementById("grid-drawer").classList.remove("open");
+      const target = document.getElementById("q-card-" + qNum);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    gridEl.appendChild(gBtn);
+
+    // Question card
+    const card = document.createElement("div");
+    card.className = "q-card";
+    card.id = "q-card-" + qNum;
+    card.dataset.id = qNum;
+
+    const qTitle = document.createElement("div");
+    qTitle.className = "q-text";
+    qTitle.textContent = item.q;
+    card.appendChild(qTitle);
+
+    const optsWrap = document.createElement("div");
+    optsWrap.className = "opts-list";
+
+    item.opts.forEach((optText, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "opt-btn";
+      btn.textContent = optText;
+      if (isAnswered) {
+        btn.disabled = true;
+        if (idx === item.ans) btn.classList.add("correct");
+        else if (idx === chosen) btn.classList.add("wrong");
+      } else {
+        btn.onclick = () => handleSelect(qNum, idx);
+      }
+      optsWrap.appendChild(btn);
+    });
+
+    card.appendChild(optsWrap);
+
+    const fb = document.createElement("div");
+    fb.className = "q-feedback" + (isAnswered ? (" show " + (isCorrect ? "ok" : "err")) : "");
+    if (isAnswered) {
+      const ansLetter = ["A", "B", "C", "D"][item.ans];
+      fb.textContent = isCorrect ? "✓ Chính xác!" : ("✕ Sai rồi. Đáp án đúng là: " + ansLetter);
+    }
+    card.appendChild(fb);
+
+    listEl.appendChild(card);
+  });
+
+  updateStatsAndFilter();
+}
+
+function handleSelect(qNum, optIdx) {
+  if (userAnswers[qNum] !== undefined) return;
+  userAnswers[qNum] = optIdx;
+  saveProgress();
+
+  const item = QUESTIONS[qNum - 1];
+  const isCorrect = optIdx === item.ans;
+  const card = document.getElementById("q-card-" + qNum);
+  const btns = card.querySelectorAll(".opt-btn");
+  btns.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === item.ans) b.classList.add("correct");
+    else if (idx === optIdx) b.classList.add("wrong");
+  });
+
+  const fb = card.querySelector(".q-feedback");
+  const ansLetter = ["A", "B", "C", "D"][item.ans];
+  fb.className = "q-feedback show " + (isCorrect ? "ok" : "err");
+  fb.textContent = isCorrect ? "✓ Chính xác!" : ("✕ Sai rồi. Đáp án đúng là: " + ansLetter);
+
+  const gBtn = document.querySelector(`.grid-item[data-id="${qNum}"]`);
+  if (gBtn) gBtn.classList.add(isCorrect ? "correct" : "wrong");
+
+  updateStatsAndFilter();
+}
+
+function updateStatsAndFilter() {
+  let correctCount = 0;
+  let wrongCount = 0;
+  QUESTIONS.forEach((q, index) => {
+    const qNum = index + 1;
+    const c = userAnswers[qNum];
+    if (c !== undefined) {
+      if (c === q.ans) correctCount++;
+      else wrongCount++;
+    }
+  });
+  const unansweredCount = QUESTIONS.length - correctCount - wrongCount;
+
+  document.getElementById("stat-correct").textContent = correctCount;
+  document.getElementById("stat-wrong").textContent = wrongCount;
+  document.getElementById("stat-unanswered").textContent = unansweredCount;
+
+  let visibleCount = 0;
+  QUESTIONS.forEach((q, index) => {
+    const qNum = index + 1;
+    const c = userAnswers[qNum];
+    const card = document.getElementById("q-card-" + qNum);
+    let show = true;
+    if (currentFilter === "unanswered") show = c === undefined;
+    else if (currentFilter === "correct") show = c !== undefined && c === q.ans;
+    else if (currentFilter === "wrong") show = c !== undefined && c !== q.ans;
+
+    card.style.display = show ? "block" : "none";
+    if (show) visibleCount++;
+  });
+
+  document.getElementById("empty-state").style.display = visibleCount === 0 ? "block" : "none";
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll(".filter-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.filter === filter);
+  });
+  updateStatsAndFilter();
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => setFilter(btn.dataset.filter));
+});
+
+document.getElementById("toggle-grid").addEventListener("click", () => {
+  const drawer = document.getElementById("grid-drawer");
+  drawer.classList.toggle("open");
+});
+
+document.getElementById("btn-next-unanswered").addEventListener("click", () => {
+  const nextIdx = QUESTIONS.findIndex((q, i) => userAnswers[i + 1] === undefined);
+  if (nextIdx === -1) {
+    alert("Bạn đã hoàn thành tất cả 120 câu hỏi!");
+    return;
+  }
+  const nextQNum = nextIdx + 1;
+  if (currentFilter !== "all" && currentFilter !== "unanswered") {
+    setFilter("all");
+  }
+  const target = document.getElementById("q-card-" + nextQNum);
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+  if (confirm("Bạn có chắc muốn xóa toàn bộ kết quả và làm lại từ đầu?")) {
+    userAnswers = {};
+    saveProgress();
+    setFilter("all");
+    renderApp();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+renderApp();
+</script>
+</body>
+</html>
